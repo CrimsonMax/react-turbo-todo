@@ -1,44 +1,38 @@
 import { Box, Button, Checkbox, Typography } from '@mui/material';
+import { todoStyle } from './todoStyle';
 
-function Todo() {
+function Todo(props) {
 
-  const mainBoxStyle = {
-    display: 'flex',
-    justifyContent: 'center',
-    gap: 1,
-    height: 'fit-content'
+  const checkHandler = () => {
+    props.setTodoArray(
+      props.todoArray.map((elem) => {
+        if (elem.id === props.todo.id) {
+          return {
+            ...elem,
+            checked: !elem.checked
+          }
+        }
+        return elem
+      })
+    )
   }
 
-  const checkBoxStyle = {
-    '& .MuiSvgIcon-root': { fontSize: 28 },
-    width: 56,
-    height: 56,
-    alignSelf: 'center'
-  }
-
-  const textStyle = { 
-    height: '100%', 
-    backgroundColor: 'gold', 
-    width: 695, 
-    wordBreak: 'break-word', 
-    borderRadius: 4 
-  }
-
-  const buttonStyle = { 
-    width: 150, 
-    height: 56, 
-    alignSelf: 'center' 
+  const deleteHandler = () => {
+    props.setTodoArray(
+      props.todoArray.filter((elem) => elem.id !== props.todo.id)
+    )
   }
 
   return (
     <>
-      <Box sx={mainBoxStyle}>
-        <Checkbox sx={checkBoxStyle} color="success" />
-        <Typography sx={textStyle} align='center' variant="h6" component="div">
-          subtitle1. Lorem ipsum dolor sit amet, consectetur adipisicing elit. Quos
-          blanditiis tenetur
+      <Box sx={todoStyle.mainBoxStyle}>
+        <Checkbox onChange={checkHandler} checked={props.checked} sx={todoStyle.checkBoxStyle} color="success" />
+        <Typography sx={props.checked ? todoStyle.textStyle2 : todoStyle.textStyle1} align='center' variant="h6" component="div">
+          {props.text}
         </Typography>
-        <Button sx={buttonStyle} color="error" variant="contained">Delete</Button>
+        <Button onClick={deleteHandler} sx={todoStyle.buttonStyle} disabled={!props.checked && true} color="error" variant="contained">
+          Delete
+        </Button>
       </Box>
     </>
   );

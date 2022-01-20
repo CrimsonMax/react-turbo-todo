@@ -1,50 +1,45 @@
+import { useEffect, useState } from 'react';
 import './App.css';
-import Container from '@mui/material/Container';
-import Input from './components/input/Input';
-import Todo from './components/todo/Todo';
-import { Box } from '@mui/material';
+import MainContainer from './components/main_container/MainContainer';
 
 function App() {
 
-  const mainContainerStyle = {
-    display: 'flex',
-    justifyContent: 'center',
-    flexDirection: 'column',
-    gap: 1
-  }
+  // Main State
+  const [inputText, setInputText] = useState('')
+  const [todoArray, setTodoArray] = useState([])
 
-  const todoBoxStyle = {
-    maxHeight: 500,
-    overflowY: 'overlay',
-    padding: 0,
-    display: 'flex',
-    justifyContent: 'flex-start',
-    flexDirection: 'column',
-    gap: 1
-  }
+  // Local Storage
+  useEffect(() => {
+    function getLocalTodos() {
+      if (localStorage.getItem('todos') === null) {
+        localStorage.setItem('todos', JSON.stringify([]))
+      } else {
+        let localTodos = JSON.parse(localStorage.getItem('todos'))
+        setTodoArray(localTodos)
+      }
+    }
+
+    getLocalTodos()
+  }, [])
+
+  useEffect(() => {
+    function saveLocalTodos() {
+      localStorage.setItem('todos', JSON.stringify(todoArray))
+    }
+
+    saveLocalTodos()
+  }, [todoArray])
+
 
   return (
-    <div className="App">
-      {/* <div className="max"> */}
-      <Container sx={mainContainerStyle}>
-        <Input />
-        <Box sx={todoBoxStyle}>
-          <Todo />
-          <Todo />
-          <Todo />
-          <Todo />
-          <Todo />
-          <Todo />
-          <Todo />
-          <Todo />
-          <Todo />
-          <Todo />
-          <Todo />
-        </Box>
-      </Container>
-      {/* </div> */}
-
-    </div>
+    <>
+      <MainContainer
+        inputText={inputText}
+        setInputText={setInputText}
+        todoArray={todoArray}
+        setTodoArray={setTodoArray}
+      />
+    </>
   );
 }
 
